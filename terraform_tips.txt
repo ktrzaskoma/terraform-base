@@ -1,0 +1,98 @@
+Przydatne komendy - Terraform:
+
+aws configure - pozwala na wpisanie providedrów 
+do aws'u (secret key, private secret key, region, output format)
+
+terraform init - inicjacja 
+terraform plan - wyświetla się plan ("+" oznacza, że coś zostało dodane, a "-",
+ że dany element został usunięty)
+terraform apply - kompiluje kod i tworzy
+
+Wywołanie terraform apply po raz drugi w momencie
+gdy w kodzie mamy zapisaną tylko jedną instancję nie 
+spowoduje, że powstanie kolejna!!!
+
+terraform destroy - niszczy stworzoną instację (tylko tą stowrzoną przez terraform) 
+
+*deklaratywne podejście pozwala na to, że daną instację 
+możemy usunąć poprzez zakomentowanie jej i zrobienie 
+terraform apply ze zmianami!!!
+
+tworzenie VPC
+
+W przypadku, gdy chcemy zwiększyć szybkość komend i uniknąć potwierdzania "yes"
+należy dodać --auto-approve:
+
+- terraform apply --auto-approve
+- terraform destroy --auto-approve
+
+Uwaga! Nie ma znaczenia w jakim miejscu będziemy odnosić się do tworzonych instacji
+
+Pliki które tworzy terraform:
+	- .terraform - folder z providerami wykonywany po wywołaniu terraform init
+	- terraform.tfstate - reprezentuje stany (uwaga: bardzo istotny)
+	
+Uwaga do projektu:
+kroki uruchamiania ->
+
+generuje kod do kluczy w aws
+następnie te klucze przerabiam w puttygen
+potem wgrywam go za pomocą SSH->Auth i tutaj beng
+jeżeli robię maszynę ubuntu to ubuntu@...numer ip
+
+przydatne komendy:
+terraform - pokaże listę komend
+terraform state list - wszystkie stany przez nas stworzone
+terraform state show (wybrany stan z listy) - szczegóły danego stanu
+
+na przykład gdy użyjemy aws_eip.one to będziemy mogli zdobyć publiczne ip
+
+OUTPUT'y - pozwalają na zobaczenie ważnych informacji, które są wynikowymi 
+wywoływanych procesów. Możemy na przykład jak output dać publiczne ip.
+
+komenda 
+- terraform output - wyrzuca wszystkie output'y
+- terraform refresh - odświeża architekture i bez problemu możemy ponownie 
+sprawdzić output'y
+
+**Target Resources**
+Możemy stosowac komendy takie jak terraform destroy/apply
+i wskazywać za pomocą komendy -target jakie konkretnie
+elementy chcemy usunąć/dodać. (np. terraform apply -target aws_instance.web-server-instance)
+ 
+Zmienne i komendy:
+
+Możemy użyć jeszcze TF_VAR_<name> environment variables
+
+- terraform apply -var "subnet_prefix=10.0.1.0/24" - w tej komendzie od razu przekazujemy 
+wartość dla zmiennej
+
+pliki z rozszerzeniem .tfvars mogą przechowywać wartość zmiennej
+
+- terraform apply -var-file example.tfvars - wskazanie na konkretny plik ze zmiennymi
+
+
+default - wartość używana w sytuacji, gdy inne zmienne nie zostaną nadane
+
+
+-- początek deklaracji -- 
+-- Zmienne (Variables) -- 
+
+# 1. Typy
+- Input Variables (zmienne wejściowe) -> deklarowanie var.<name>
+- Local Variables (zmienne lokalne) -> deklarowanie local.<name>
+- Output Variables (zmienne wyjściowe) -> to jest element, który możemy wyświetlić w terminalu (np. ip_address)
+
+# 2. Ustawianie zmiennych wejściowych
+- Manualne podczas wykonywania komendy plan/apply
+- Deklaracja wartości domyślnej w bloku deklaracyjnym (variables)
+- TF_VAR_<name> (TF_LOG, TF_CLI_ARGS) 
+- Plik terraform.tfvars 
+- Plik *auto.tfvars 
+- Komenda -var lub -var-file 
+
+# 3. Ustawienie zmienneych lokalnych
+	Zmienne lokalne są dostępne tylko w zasięgu pliku, w którym zadeklarowany jest 
+	blok locals wraz ze zmienną.
+
+#
