@@ -45,3 +45,7 @@ Odświeży infrastrukturę, wprowadzi dokonane zmiany i wyświetli wartości z b
 ```bash
   terraform refresh
 ```
+Wprowadzi zmieny stylistyczne w kodzie zgodnie z konwencją zalecaną w dokumentacji:
+```bash
+  terraform fmt
+```
